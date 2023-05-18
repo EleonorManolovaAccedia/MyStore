@@ -1,7 +1,11 @@
 package com.example.mystore.di
 
-import com.example.mystore.ProductsRepository
+import com.example.mystore.ServiceInterceptor
+import com.example.mystore.TokenManager
+import com.example.mystore.repository.ProductsRepository
 import com.example.mystore.networking.API
+import com.example.mystore.networking.ApiClient
+import com.example.mystore.repository.LoginRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +30,7 @@ object ApiModule {
     @Singleton
     @Provides
     fun providesOkHttpClient(loggingInterceptor: HttpLoggingInterceptor) =
-        okhttp3.OkHttpClient
+        OkHttpClient
             .Builder()
             .addInterceptor(loggingInterceptor)
             .build()
@@ -43,7 +47,31 @@ object ApiModule {
     @Provides
     fun provideApiService(retrofit: Retrofit): API = retrofit.create(API::class.java)
 
+
+    @Provides
+    @Singleton
+    fun provideTokenManager(): TokenManager {
+        return TokenManager()
+    }
+
     @Singleton
     @Provides
-    fun providePostRepository(apiService: API) = ProductsRepository(apiService)
+    fun provideServiceInterceptor(tokenManager: TokenManager) = ServiceInterceptor(tokenManager)
+
+    @Singleton
+    @Provides
+    fun provideApiClient(serviceInterceptor: ServiceInterceptor) = ApiClient(serviceInterceptor)
+
+    @Singleton
+    @Provides
+    fun provideProductsRepository(apiService: API) = ProductsRepository(apiService)
+
+    @Singleton
+    @Provides
+    fun provideLoginRepository(
+        apiService: API,
+        apiClient: ApiClient,
+        tokenManager: TokenManager
+    ) =
+        LoginRepository(apiService, apiClient,  tokenManager)
 }
