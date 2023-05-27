@@ -1,4 +1,4 @@
-package com.example.mystore.ui.screens
+package com.example.mystore.ui.login
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,9 +33,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.mystore.hasDigits
-import com.example.mystore.isMixedCase
-import com.example.mystore.isOverEightCharacters
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.mystore.util.hasDigits
+import com.example.mystore.util.isOverSevenCharacters
+import com.example.mystore.model.LoginModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,20 +48,21 @@ fun LoginScreen(navigateToProductDetailsScreen: () -> Unit = {}) {
     var emailField by remember { mutableStateOf("") }
     var isEmailValid by remember { mutableStateOf(false) }
     var passwordField by remember { mutableStateOf("") }
-    var passwordVisible = rememberSaveable { mutableStateOf(false) }
-    val rightPassword = "Password01"
-    val rightEmail = "test@abv.bg"
+    val passwordVisible = rememberSaveable { mutableStateOf(false) }
     var isValidInput by remember { mutableStateOf(false) }
+    var isButtonEnabled by remember { mutableStateOf(true) }
     val mContext = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    var loginViewModel: LoginViewModel = hiltViewModel()
+    val errorMessage = "Your email or password are incorrect"
     val isValidEmail: (email: String) -> Boolean = { email ->
         android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
     val validateFields: (email: String, password: String) -> Boolean = { email, password ->
         email.isNotBlank() &&
                 isValidEmail(email) &&
-                password.isOverEightCharacters() &&
-                password.hasDigits() &&
-                password.isMixedCase()
+                password.isOverSevenCharacters() &&
+                password.hasDigits()
     }
     Column(
         modifier = Modifier
@@ -117,9 +125,8 @@ fun LoginScreen(navigateToProductDetailsScreen: () -> Unit = {}) {
                 }
             },
             supportingText = {
-                if ((!passwordField.isOverEightCharacters() ||
-                            !passwordField.hasDigits() ||
-                            !passwordField.isMixedCase()) &&
+                if ((!passwordField.isOverSevenCharacters() ||
+                            !passwordField.hasDigits()) &&
                     passwordField.isNotEmpty()
                 ) {
                     Text(text = "Invalid password", color = Color.Red)
@@ -129,18 +136,38 @@ fun LoginScreen(navigateToProductDetailsScreen: () -> Unit = {}) {
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 isValidInput = validateFields(emailField, passwordField)
-                if (isValidInput && emailField == rightEmail && passwordField == rightPassword) {
-                    navigateToProductDetailsScreen()
+                if (isValidInput) {
+                    isButtonEnabled = false
+                    val loginModel = LoginModel(emailField, passwordField)
+                    coroutineScope.launch(Dispatchers.IO) {
+                        loginViewModel.login(loginModel)
+                        coroutineScope.launch(Dispatchers.Main) {
+                            loginViewModel.response?.let {
+                                if (it.isSuccessful) {
+                                    navigateToProductDetailsScreen()
+                                } else {
+                                    val errorBody = it.errorBody()?.string()
+                                    if (errorBody != null) {
+                                        val jObjError = JSONObject(errorBody)
+                                        val errorMessage = jObjError.getJSONObject("error").getString("message")
+                                        Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show()
+                                    } else {
+                                        Toast.makeText(mContext, "Unknown error occurred", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
                 } else {
-                    Toast.makeText(
-                        mContext,
-                        "Your email or password are incorrect",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    passwordField = ""
+                    Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show()
                 }
+                isButtonEnabled = true
+                passwordField = ""
             },
-            enabled = validateFields(emailField, passwordField)
+            enabled = validateFields(emailField, passwordField) && isButtonEnabled,
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 10.dp
+            )
         )
         {
             Text(text = "Log in")

@@ -1,12 +1,14 @@
 package com.example.mystore.networking
 
+import com.example.mystore.ServiceInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class ApiClient {
+
+class ApiClient (private val serviceInterceptor: ServiceInterceptor) {
     private val DEFAULT_TIMEOUT = 1L
 
     val defaultService: API
@@ -18,6 +20,7 @@ class ApiClient {
     private fun createService(): API {
         val okHttpClient: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .addInterceptor(serviceInterceptor)
             .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.MINUTES)
             .readTimeout(DEFAULT_TIMEOUT, TimeUnit.MINUTES)
             .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.MINUTES)
@@ -31,7 +34,7 @@ class ApiClient {
 
         var client = Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://randomuser.me")
+            .baseUrl("https://ethereal-artefacts.fly.dev/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
