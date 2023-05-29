@@ -1,11 +1,9 @@
 package com.example.mystore.di
 
-import com.example.mystore.ServiceInterceptor
 import com.example.mystore.TokenManager
-import com.example.mystore.repository.ProductsRepository
+import com.example.mystore.repository.ProductsRepositoryImpl
 import com.example.mystore.networking.API
-import com.example.mystore.networking.ApiClient
-import com.example.mystore.repository.LoginRepository
+import com.example.mystore.repository.LoginRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,12 +12,14 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
-    private const val BASE_URL = "https://fakestoreapi.com"
+    private val DEFAULT_TIMEOUT = 1L
+    private const val BASE_URL = "https://ethereal-artefacts.fly.dev/api/"
 
     @Singleton
     @Provides
@@ -29,10 +29,17 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun providesOkHttpClient(loggingInterceptor: HttpLoggingInterceptor) =
+    fun providesOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        serviceInterceptor: ServiceInterceptor
+    ): OkHttpClient =
         OkHttpClient
             .Builder()
+            .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.MINUTES)
+            .readTimeout(DEFAULT_TIMEOUT, TimeUnit.MINUTES)
+            .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.MINUTES)
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(serviceInterceptor)
             .build()
 
     @Singleton
@@ -58,20 +65,12 @@ object ApiModule {
     @Provides
     fun provideServiceInterceptor(tokenManager: TokenManager) = ServiceInterceptor(tokenManager)
 
-    @Singleton
-    @Provides
-    fun provideApiClient(serviceInterceptor: ServiceInterceptor) = ApiClient(serviceInterceptor)
 
     @Singleton
     @Provides
-    fun provideProductsRepository(apiService: API) = ProductsRepository(apiService)
+    fun provideProductsRepository(apiService: API) = ProductsRepositoryImpl(apiService)
 
     @Singleton
     @Provides
-    fun provideLoginRepository(
-        apiService: API,
-        apiClient: ApiClient,
-        tokenManager: TokenManager
-    ) =
-        LoginRepository(apiService, apiClient,  tokenManager)
+    fun provideLoginRepository(apiService: API) = LoginRepositoryImpl(apiService)
 }

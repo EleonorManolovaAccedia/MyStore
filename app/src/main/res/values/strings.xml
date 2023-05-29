@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">MyStore</string>
+    <string name="products_details_page_title">Item</string>
+    <string name="in_stock_label">In Stock</string>
+    <string name="out_of_stock_label">Out of Stock</string>
+    <string name="add_to_cart_label">Add to cart</string>
+
+    <string name="login_details_title">Log in</string>
+    <string name="password_label">Password</string>
+    <string name="email_label">Email</string>
+    <string name="background_image_description">Background Image</string>
 </resources>
