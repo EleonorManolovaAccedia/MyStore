@@ -1,6 +1,6 @@
 package com.example.mystore
 
-class TokenManager( private var jwtToken: String? = null) {
+class TokenManager(private var jwtToken: String? = null) {
 
     fun saveToken(token: String?) {
         jwtToken = token

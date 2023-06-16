@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_extra_small">5dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_small_15">15dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_medium_20">20dp</dimen>
+    <dimen name="padding_medium_25">25dp</dimen>
+    <dimen name="padding_large">30dp</dimen>
+    <dimen name="padding_bottom_title">17dp</dimen>
+    <dimen name="padding_bottom_large">35dp</dimen>
+    <dimen name="padding_bottom_medium">20dp</dimen>
+    <dimen name="padding_top_logo">150dp</dimen>
+    <dimen name="padding_top_medium_20">20dp</dimen>
+    <dimen name="padding_top_title">310dp</dimen>
+
+    <dimen name="image_size">300dp</dimen>
+
+    <dimen name="icon_size">30dp</dimen>
+    <dimen name="icon_size_large">50dp</dimen>
+
+    <dimen name="elevation">10dp</dimen>
+
+    <dimen name="rounded_large">50dp</dimen>
+    <dimen name="rounded_medium">16dp</dimen>
+
+    <dimen name="width_200">200dp</dimen>
+
+    <dimen name="logo_height">162dp</dimen>
+    <dimen name="logo_width">256dp</dimen>
+</resources>
