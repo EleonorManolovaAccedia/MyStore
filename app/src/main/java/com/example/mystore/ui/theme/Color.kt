@@ -12,4 +12,5 @@ var Gray = Color(0xFF4A4A4A)
 var LightGray = Color(0xFFD8D9DB)
 var LightGray20 = Color(0xFFC4C4C4)
 var LightGray40 = Color(0xFF898889)
+var LightPink = Color(0xFFECE6F0)
 

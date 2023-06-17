@@ -5,15 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mystore.repository.ProductsRepositoryImpl
 import com.example.mystore.model.ProductModel
+import com.example.mystore.repository.IApiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
-    private val repository: ProductsRepositoryImpl
+    private val repository: IApiRepository
 ) : ViewModel() {
     var productModel by mutableStateOf<ProductModel?>(null)
 

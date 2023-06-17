@@ -1,4 +1,4 @@
-package com.example.mystore.ui.shared
+package com.example.mystore.ui.products.layouts
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding

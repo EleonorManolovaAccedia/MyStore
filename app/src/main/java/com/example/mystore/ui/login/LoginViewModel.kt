@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mystore.TokenManager
 import com.example.mystore.model.LoginModel
 import com.example.mystore.model.LoginResponse
-import com.example.mystore.repository.LoginRepositoryImpl
+import com.example.mystore.repository.IApiRepository
 import com.example.mystore.util.hasDigits
 import com.example.mystore.util.isOverSevenCharacters
 import com.example.mystore.util.isValidEmail
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: LoginRepositoryImpl,
+    private val repository: IApiRepository,
     private val tokenManager: TokenManager
 ) : ViewModel() {
     var error: String? by mutableStateOf(null)

@@ -9,4 +9,8 @@
     <string name="password_label">Password</string>
     <string name="email_label">Email</string>
     <string name="background_image_description">Background Image</string>
+
+    <string name="new_product_title">New products</string>
+    <string name="search_placeholder">Search</string>
+    <string name="home_page_title">Home</string>
 </resources>

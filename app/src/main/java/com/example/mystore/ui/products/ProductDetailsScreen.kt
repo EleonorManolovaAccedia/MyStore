@@ -15,8 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,29 +31,32 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mystore.R
 import com.example.mystore.ui.shared.CustomTopBar
-import com.example.mystore.ui.shared.RatingBar
-import com.example.mystore.ui.theme.DarkPurple
+import com.example.mystore.ui.products.layouts.RatingBar
+import com.example.mystore.ui.shared.SubmitButton
 import com.example.mystore.ui.theme.Gray
 import com.example.mystore.ui.theme.Green40
-import com.example.mystore.ui.theme.LightGray20
-import com.example.mystore.ui.theme.LightGray40
 import com.example.mystore.ui.theme.Red
 import com.example.mystore.ui.theme.White
 import com.example.mystore.util.Constants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductDetailsScreen() {
+fun ProductDetailsScreen(productId: Int, navController: NavHostController) {
     val productViewModel: ProductDetailsViewModel = hiltViewModel()
     LaunchedEffect(Unit) {
-        productViewModel.getProduct(productId = 1)
+        productViewModel.getProduct(productId = productId)
     }
     productViewModel.productModel?.let {
         Scaffold(topBar = {
-            CustomTopBar(title = stringResource(id = R.string.products_details_page_title))
+            CustomTopBar(
+                navController= navController,
+                title = stringResource(id = R.string.products_details_page_title),
+                canGoBack = true
+            )
         }
         ) { paddingValues ->
             Column(
@@ -154,29 +155,15 @@ fun ProductDetailsScreen() {
                         fontWeight = FontWeight.Bold
                     )
                 )
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding_small)),
-                    onClick = {},
+                SubmitButton(
                     enabled = it.stock > 0,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = DarkPurple,
-                        contentColor = White,
-                        disabledContainerColor = LightGray20,
-                        disabledContentColor = LightGray40
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = dimensionResource(id = R.dimen.elevation),
-                        disabledElevation = dimensionResource(id = R.dimen.elevation)
-                    ),
-                    shape = RoundedCornerShape(50)
+                    onClick = { },
+                    buttonText = stringResource(id = R.string.add_to_cart_label)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
                         stringResource(id = R.string.add_to_cart_label)
                     )
-                    Text(text = stringResource(id = R.string.add_to_cart_label))
                 }
             }
         }
