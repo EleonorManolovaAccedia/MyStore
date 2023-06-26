@@ -18,16 +18,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.navigation.NavController
 import com.example.mystore.R
 import com.example.mystore.ui.theme.Gray
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopBar(
-    navController: NavController? = null,
     title: String,
-    canGoBack: Boolean = false
+    destinationsNavigator: DestinationsNavigator,
+    canGoBack: Boolean = false,
+    showShoppingCart: Boolean = false,
+    showProfile: Boolean = false
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -39,36 +41,36 @@ fun CustomTopBar(
             )
         },
         navigationIcon = {
-            navController?.let {
-                if (canGoBack)
-                    IconButton(onClick = { it.navigateUp() }) {
-                        Icon(
-                            modifier = Modifier
-                                .size(dimensionResource(id = R.dimen.icon_size_large))
-                                .padding(dimensionResource(id = R.dimen.padding_extra_small)),
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-            }
+            if (canGoBack)
+                IconButton(onClick = { destinationsNavigator.navigateUp() }) {
+                    Icon(
+                        modifier = Modifier
+                            .size(dimensionResource(id = R.dimen.icon_size_large))
+                            .padding(dimensionResource(id = R.dimen.padding_extra_small)),
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
         },
         actions = {
-            Box(modifier = Modifier
-                .clickable { }
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(dimensionResource(id = R.dimen.icon_size)),
-                    imageVector = Icons.Outlined.AccountCircle,
-                    contentDescription = "Account",
-                    tint = Gray
-                )
-            }
-            Box(modifier = Modifier
-                .clickable { }
-                .padding(dimensionResource(id = R.dimen.padding_small_15))) {
-                IconWithCircle(icon = Icons.Outlined.ShoppingCart, text = "4")
-            }
+            if (showProfile)
+                Box(modifier = Modifier
+                    .clickable { }
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(dimensionResource(id = R.dimen.icon_size)),
+                        imageVector = Icons.Outlined.AccountCircle,
+                        contentDescription = "Account",
+                        tint = Gray
+                    )
+                }
+            if (showShoppingCart)
+                Box(modifier = Modifier
+                    .clickable { }
+                    .padding(dimensionResource(id = R.dimen.padding_small_15))) {
+                    IconWithCircle(icon = Icons.Outlined.ShoppingCart, text = "4")
+                }
         }
     )
 }

@@ -1,5 +1,6 @@
 package com.example.mystore.repository
 
+import com.example.mystore.model.CategoryDetailsModel
 import com.example.mystore.model.LoginModel
 import com.example.mystore.model.LoginResponse
 import com.example.mystore.model.ProductModel
@@ -18,5 +19,9 @@ class ApiRepository @Inject constructor(private val api: API) : IApiRepository {
 
     override suspend fun getProducts(): List<ProductModel> {
         return api.getProducts()
+    }
+
+    override suspend fun getCategories(): List<CategoryDetailsModel> {
+        return api.getCategories()
     }
 }

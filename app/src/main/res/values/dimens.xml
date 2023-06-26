@@ -34,4 +34,5 @@
     <dimen name="product_image_size">130dp</dimen>
     <dimen name="products_top">113dp</dimen>
     <dimen name="thickness_small">1dp</dimen>
+    <dimen name="arrow_drop_down">40dp</dimen>
 </resources>

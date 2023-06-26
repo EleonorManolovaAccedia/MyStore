@@ -10,11 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.IntOffset
 import com.example.mystore.R
+import com.example.mystore.ui.theme.Black
 import com.example.mystore.ui.theme.Purple40
 import com.example.mystore.ui.theme.White
 
@@ -27,21 +27,23 @@ fun IconWithCircle(icon: ImageVector, text: String, onClick: () -> Unit = {}) {
             tint = Black,
             contentDescription = null
         )
-        Text(
-            text = text,
-            color = White,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.padding_small))
-                .offset {
-                    IntOffset(x = +20, y = -20)
-                }
-                .drawBehind {
-                    drawCircle(
-                        color = Purple40,
-                        radius = this.size.minDimension
-                    )
-                }
-        )
+        if (text.isNotEmpty()) {
+            Text(
+                text = text,
+                color = White,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .offset {
+                        IntOffset(x = +20, y = -20)
+                    }
+                    .drawBehind {
+                        drawCircle(
+                            color = Purple40,
+                            radius = this.size.minDimension
+                        )
+                    }
+            )
+        }
     }
 }

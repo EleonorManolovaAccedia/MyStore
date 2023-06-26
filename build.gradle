@@ -3,7 +3,7 @@ buildscript {
         compose_version = '1.4.3'
         retrofit_version = '2.9.0'
         ok_logging_interceptor = '5.0.0-alpha.10'
-
+        compose_destinations = '1.8.42-beta'
     }
 }
 

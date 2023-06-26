@@ -18,28 +18,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mystore.R
 import com.example.mystore.model.ProductModel
 import com.example.mystore.ui.products.layouts.RatingBar
 import com.example.mystore.ui.theme.Gray
 import com.example.mystore.ui.theme.LightGray40
+import com.example.mystore.ui.theme.Black
 import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
 fun ProductRow(
     product: ProductModel,
-    navController: NavController
+    onclick: () -> Unit
 ) {
     Column {
         Row(
             modifier = Modifier
-                .clickable { navController.navigate("ProductDetailsScreen/${product.id}") },
+                .clickable { onclick() },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -74,7 +73,9 @@ fun ProductRow(
                 )
 
                 RatingBar(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end= dimensionResource(id = R.dimen.padding_large)),
                     rating = product.rating
                 )
 

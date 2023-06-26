@@ -44,7 +44,8 @@ fun Search(
         shape = Shape.large,
         colors = TextFieldDefaults.textFieldColors(
             containerColor = LightPink,
-            textColor = Gray,
+            focusedTextColor = Gray,
+            unfocusedTextColor = Gray
         ),
         textStyle = MaterialTheme.typography.labelMedium,
         leadingIcon = {
