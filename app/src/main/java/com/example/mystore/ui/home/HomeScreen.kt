@@ -51,7 +51,7 @@ fun HomeScreen(destinationsNavigator: DestinationsNavigator) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium_20))
+                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium_horizontal))
         ) {
             Search(
                 input = viewModel.input,
@@ -61,7 +61,7 @@ fun HomeScreen(destinationsNavigator: DestinationsNavigator) {
 
             Filter(
                 filtersCount = viewModel.filtersCount,
-                currentFilters = viewModel.getFilters(),
+                currentFilters = viewModel.filtersModel,
                 categories = viewModel.categories
             ) {
                 viewModel.setFilters(it)

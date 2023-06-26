@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,9 +33,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.mystore.R
 import com.example.mystore.model.CategoryDetailsModel
+import com.example.mystore.ui.home.layouts.DropDownRow
 import com.example.mystore.ui.theme.Gray
 import com.example.mystore.ui.theme.Black
-import com.example.mystore.ui.theme.DarkPurple
+import com.example.mystore.util.Constants.MAX_ROTATE
+import com.example.mystore.util.Constants.MIN_ROTATE
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,9 +47,16 @@ fun ExpandableList(
     onFiltersChanged: (CategoryDetailsModel) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val selectedCategoriesString: String = stringResource(id = R.string.all_categories_filter)
+    val filteredCategories2: List<CategoryDetailsModel> =
+        data.filter { selectedCategoriesString.contains(it.name) }
+    if (filteredCategories2.isNotEmpty() && filteredCategories2.count() != data.count()) {
+        filteredCategories2.joinToString { it.name }
+    } 
+
 
     val rotateState = animateFloatAsState(
-        targetValue = if (expanded) 180F else 0F,
+        targetValue = if (expanded) MAX_ROTATE else MIN_ROTATE,
     )
 
     Column(
@@ -69,11 +77,6 @@ fun ExpandableList(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = CenterVertically
             ) {
-                var selectedCategoriesString = stringResource(id = R.string.all_categories_filter)
-                val filteredCategories = data.filter { selectedCategories.contains(it.name) }
-                if (filteredCategories.isNotEmpty() && filteredCategories.count() != data.count()) {
-                    selectedCategoriesString = filteredCategories.joinToString { it.name }
-                }
                 Column {
                     Text(
                         text = stringResource(id = R.string.category),
@@ -104,27 +107,14 @@ fun ExpandableList(
                     .fillMaxWidth()
             ) {
                 items(data) { category ->
-                    Row(
-                        modifier = Modifier
-                           .padding(dimensionResource(id = R.dimen.padding_medium_20))
+                    DropDownRow(
+                        modifier =  Modifier
+                            .padding(dimensionResource(id = R.dimen.padding_medium_horizontal))
                             .fillMaxWidth()
                             .clickable { onFiltersChanged(category) },
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = CenterVertically
-                    ) {
-                        Text(
-                            text = category.name,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = Black
-                        )
-                        if (selectedCategories.contains(category.name)) {
-                            Icon(
-                                Icons.Outlined.Check,
-                                "",
-                                tint = DarkPurple
-                            )
-                        }
-                    }
+                        name = category.name,
+                        selectedCategories = selectedCategories,
+                    )
                 }
             }
         }

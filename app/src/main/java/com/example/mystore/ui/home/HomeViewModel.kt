@@ -13,6 +13,7 @@ import com.example.mystore.model.CategoryDetailsModel
 import com.example.mystore.model.FiltersModel
 import com.example.mystore.model.ProductModel
 import com.example.mystore.repository.IApiRepository
+import com.example.mystore.util.containsString
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,6 +34,7 @@ class HomeViewModel @Inject constructor(
         addAll(listOf("Home"))
     }
     var filtersCount by mutableIntStateOf(3)
+    var filtersModel = FiltersModel(priceStartRange, priceEndRange, rating, selectedCategories)
 
     init {
         getProducts()
@@ -48,32 +50,23 @@ class HomeViewModel @Inject constructor(
         }
 
         if (selectedCategories.isNotEmpty() && selectedCategories.count() != categories.count()) {
-            products.apply {
-                removeAll(products.filter {
-                    !selectedCategories.contains(it.category)
-                })
-            }
+            products.removeAll(products.filter {
+                !selectedCategories.contains(it.category)
+            })
+        }
+        newInput?.let {
+            input = it
         }
 
-        if (newInput != null) {
-            input = newInput
-        }
         if (input.isNotEmpty()) {
-            products.apply {
-                removeAll(
-                    products.filter { product ->
-                        !(product.title.lowercase().contains(input.lowercase()) ||
-                                product.short_description.lowercase()
-                                    .contains(input.lowercase()) ||
-                                product.category.lowercase().contains(input.lowercase()))
-                    }
-                )
-            }
+            products.removeAll(
+                products.filter { product ->
+                    !(product.title.containsString(input) ||
+                            product.short_description.containsString(input) ||
+                            product.category.containsString(input))
+                }
+            )
         }
-    }
-
-    fun getFilters(): FiltersModel {
-        return FiltersModel(priceStartRange, priceEndRange, rating, selectedCategories)
     }
 
     fun setFilters(filters: FiltersModel) {

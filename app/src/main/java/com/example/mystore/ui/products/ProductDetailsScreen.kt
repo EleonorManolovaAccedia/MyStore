@@ -77,7 +77,7 @@ fun ProductDetailsScreen(destinationsNavigator: DestinationsNavigator, product: 
                     ) {
                         Card(
                             modifier = Modifier
-                                .padding(dimensionResource(id = R.dimen.padding_medium_20)),
+                                .padding(dimensionResource(id = R.dimen.padding_medium_horizontal)),
                             colors = CardDefaults.cardColors(containerColor = White),
                             shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_large)),
                             elevation = CardDefaults.cardElevation(

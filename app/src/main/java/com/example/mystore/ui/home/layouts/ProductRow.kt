@@ -52,7 +52,7 @@ fun ProductRow(
                     .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_medium)))
             )
 
-            Column(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium_20))) {
+            Column(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium_horizontal))) {
                 Text(
                     text = "Category: ${product.category}",
                     color = Gray,

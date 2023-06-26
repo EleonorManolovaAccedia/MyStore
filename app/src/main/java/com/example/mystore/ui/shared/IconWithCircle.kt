@@ -17,6 +17,7 @@ import com.example.mystore.R
 import com.example.mystore.ui.theme.Black
 import com.example.mystore.ui.theme.Purple40
 import com.example.mystore.ui.theme.White
+import com.example.mystore.util.Constants.OFFSET
 
 @Composable
 fun IconWithCircle(icon: ImageVector, text: String, onClick: () -> Unit = {}) {
@@ -35,7 +36,7 @@ fun IconWithCircle(icon: ImageVector, text: String, onClick: () -> Unit = {}) {
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
                     .offset {
-                        IntOffset(x = +20, y = -20)
+                        IntOffset(x = +OFFSET, y = -OFFSET)
                     }
                     .drawBehind {
                         drawCircle(

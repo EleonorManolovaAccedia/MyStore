@@ -69,8 +69,8 @@ fun FiltersBottomSheet(
     ) {
         Column(
             modifier = Modifier.padding(
-                start = dimensionResource(id = R.dimen.padding_medium_20),
-                end = dimensionResource(id = R.dimen.padding_medium_20)
+                start = dimensionResource(id = R.dimen.padding_medium_horizontal),
+                end = dimensionResource(id = R.dimen.padding_medium_horizontal)
             )
         ) {
             Row(

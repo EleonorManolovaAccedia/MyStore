@@ -192,7 +192,9 @@ fun LoginScreen(destinationsNavigator: DestinationsNavigator) {
                     onClick = {
                         isButtonEnabled = false
                         loginViewModel.login(LoginModel(emailField, passwordField))
-                        { destinationsNavigator.navigate(NavGraphs.home) }
+                        {
+                            destinationsNavigator.navigate(NavGraphs.home)
+                        }
                         isButtonEnabled = true
                         passwordField = ""
                     },
