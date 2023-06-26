@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,11 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.navigation.NavController
 import com.example.mystore.R
+import com.example.mystore.ui.theme.Gray
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTopBar(title: String) {
+fun CustomTopBar(
+    navController: NavController? = null,
+    title: String,
+    canGoBack: Boolean = false
+) {
     CenterAlignedTopAppBar(
         title = {
             Text(
@@ -32,27 +39,35 @@ fun CustomTopBar(title: String) {
             )
         },
         navigationIcon = {
-            IconButton(onClick = {}, enabled = false) {
-                Icon(
-                    modifier = Modifier
-                        .size(dimensionResource(id = R.dimen.icon_size_large))
-                        .padding(dimensionResource(id = R.dimen.padding_extra_small)),
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Back"
-                )
+            navController?.let {
+                if (canGoBack)
+                    IconButton(onClick = { it.navigateUp() }) {
+                        Icon(
+                            modifier = Modifier
+                                .size(dimensionResource(id = R.dimen.icon_size_large))
+                                .padding(dimensionResource(id = R.dimen.padding_extra_small)),
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
             }
         },
         actions = {
             Box(modifier = Modifier
                 .clickable { }
-                .padding(dimensionResource(id = R.dimen.padding_small_15))) {
+            ) {
                 Icon(
                     modifier = Modifier
-                        .size(dimensionResource(id = R.dimen.icon_size_large))
-                        .padding(dimensionResource(id = R.dimen.padding_extra_small)),
-                    imageVector = Icons.Outlined.ShoppingCart,
-                    contentDescription = "Cart"
+                        .size(dimensionResource(id = R.dimen.icon_size)),
+                    imageVector = Icons.Outlined.AccountCircle,
+                    contentDescription = "Account",
+                    tint = Gray
                 )
+            }
+            Box(modifier = Modifier
+                .clickable { }
+                .padding(dimensionResource(id = R.dimen.padding_small_15))) {
+                IconWithCircle(icon = Icons.Outlined.ShoppingCart, text = "4")
             }
         }
     )

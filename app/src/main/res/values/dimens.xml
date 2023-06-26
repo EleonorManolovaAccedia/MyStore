@@ -28,4 +28,10 @@
 
     <dimen name="logo_height">162dp</dimen>
     <dimen name="logo_width">256dp</dimen>
+
+    <dimen name="search_size">50dp</dimen>
+    <dimen name="filter_top">63dp</dimen>
+    <dimen name="product_image_size">130dp</dimen>
+    <dimen name="products_top">113dp</dimen>
+    <dimen name="thickness_small">1dp</dimen>
 </resources>

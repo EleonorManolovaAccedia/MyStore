@@ -1,9 +1,9 @@
 package com.example.mystore.di
 
 import com.example.mystore.TokenManager
-import com.example.mystore.repository.ProductsRepositoryImpl
 import com.example.mystore.networking.API
-import com.example.mystore.repository.LoginRepositoryImpl
+import com.example.mystore.repository.ApiRepository
+import com.example.mystore.repository.IApiRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,20 +57,13 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideTokenManager(): TokenManager {
-        return TokenManager()
-    }
+    fun provideApiRepository(apiService: API): IApiRepository = ApiRepository(apiService)
+
+    @Provides
+    @Singleton
+    fun provideTokenManager(): TokenManager = TokenManager()
 
     @Singleton
     @Provides
     fun provideServiceInterceptor(tokenManager: TokenManager) = ServiceInterceptor(tokenManager)
-
-
-    @Singleton
-    @Provides
-    fun provideProductsRepository(apiService: API) = ProductsRepositoryImpl(apiService)
-
-    @Singleton
-    @Provides
-    fun provideLoginRepository(apiService: API) = LoginRepositoryImpl(apiService)
 }

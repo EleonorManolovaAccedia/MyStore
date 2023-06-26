@@ -14,4 +14,7 @@ interface API {
 
     @GET(value = "products/{productId}?populate=*")
     suspend fun getProduct(@Path("productId") productId: Int): ProductModel
+
+    @GET(value = "products?populate=*")
+    suspend fun getProducts(): List<ProductModel>
 }

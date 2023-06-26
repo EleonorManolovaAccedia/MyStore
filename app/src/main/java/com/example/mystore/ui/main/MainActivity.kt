@@ -15,9 +15,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.mystore.ui.home.HomeScreen
 import com.example.mystore.ui.login.LoginScreen
 import com.example.mystore.ui.products.ProductDetailsScreen
 import com.example.mystore.ui.theme.MyStoreTheme
@@ -48,15 +51,29 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             navController = navController,
                             startDestination = "Login",
-                                    modifier = Modifier.padding(it),
+                            modifier = Modifier.padding(it),
                         ) {
                             composable(route = "Login") {
-                                LoginScreen(navigateToProductDetailsScreen = {
-                                    navController.navigate("ProductDetailsScreen")
+                                LoginScreen(navigateToHomeScreen = {
+                                    navController.navigate("HomeScreen")
                                 })
                             }
-                            composable(route = "ProductDetailsScreen") {
-                                ProductDetailsScreen()
+                            composable(route = "HomeScreen") {
+                                HomeScreen(navController = navController)
+                            }
+                            composable(
+                                route = "ProductDetailsScreen/{productId}",
+                                arguments = listOf(navArgument("productId") {
+                                    type = NavType.IntType
+                                })
+                            ) { navBackStackEntry ->
+                                val productId = navBackStackEntry.arguments?.getInt("productId")
+                                productId?.let {
+                                    ProductDetailsScreen(
+                                        productId = it,
+                                        navController = navController
+                                    )
+                                }
                             }
                         }
                     }

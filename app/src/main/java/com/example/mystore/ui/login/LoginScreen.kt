@@ -14,8 +14,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,18 +48,16 @@ import com.example.mystore.R
 import com.example.mystore.util.hasDigits
 import com.example.mystore.util.isOverSevenCharacters
 import com.example.mystore.model.LoginModel
+import com.example.mystore.ui.shared.SubmitButton
 import com.example.mystore.ui.theme.DarkPurple
-import com.example.mystore.ui.theme.LightGray20
-import com.example.mystore.ui.theme.LightGray40
 import com.example.mystore.ui.theme.DarkRed
-import com.example.mystore.ui.theme.Shape
 import com.example.mystore.ui.theme.White
 import com.example.mystore.util.isValidEmail
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navigateToProductDetailsScreen: () -> Unit = {}) {
+fun LoginScreen(navigateToHomeScreen: () -> Unit = {}) {
     var emailField by remember { mutableStateOf("") }
     var isEmailValid by remember { mutableStateOf(false) }
     var passwordField by remember { mutableStateOf("") }
@@ -75,21 +71,6 @@ fun LoginScreen(navigateToProductDetailsScreen: () -> Unit = {}) {
             snackbarHostState.showSnackbar(it)
         }
     }
-
-//    LaunchedEffect(Unit) {
-//        loginViewModel
-//            .toastMessage
-//            .collect { message ->
-//                Toast.makeText(
-//                    localContext,
-//                    message,
-//                    Toast.LENGTH_SHORT,
-//                ).show()
-//
-//                password = ""
-//                processing = false
-//            }
-//    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
@@ -198,37 +179,22 @@ fun LoginScreen(navigateToProductDetailsScreen: () -> Unit = {}) {
                         containerColor = White,
                     )
                 )
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = DarkPurple,
-                        disabledContainerColor = LightGray20,
-                        contentColor = White,
-                        disabledContentColor = LightGray40
-                    ),
-                    onClick = {
-                        isButtonEnabled = false
-                        loginViewModel.login(
-                            LoginModel(emailField, passwordField),
-                            navigateToProductDetailsScreen
-                        )
-                        isButtonEnabled = true
-                        passwordField = ""
-                    },
+                SubmitButton(
                     enabled = loginViewModel.validateFields(
                         emailField,
                         passwordField
                     ) && isButtonEnabled,
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = dimensionResource(id = R.dimen.elevation),
-                        disabledElevation = dimensionResource(id = R.dimen.elevation),
-                    ),
-                    shape = Shape.large
+                    onClick = {
+                        isButtonEnabled = false
+                        loginViewModel.login(
+                            LoginModel(emailField, passwordField),
+                            navigateToHomeScreen
+                        )
+                        isButtonEnabled = true
+                        passwordField = ""
+                    },
+                    buttonText = stringResource(id = R.string.login_details_title),
                 )
-                {
-                    Text(text = stringResource(id = R.string.login_details_title))
-                }
             }
         }
     }
