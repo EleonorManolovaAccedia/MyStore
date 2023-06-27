@@ -17,23 +17,20 @@ import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mystore.R
+import com.example.mystore.model.ProductModel
 import com.example.mystore.ui.shared.CustomTopBar
 import com.example.mystore.ui.products.layouts.RatingBar
 import com.example.mystore.ui.shared.SubmitButton
@@ -42,20 +39,20 @@ import com.example.mystore.ui.theme.Green40
 import com.example.mystore.ui.theme.Red
 import com.example.mystore.ui.theme.White
 import com.example.mystore.util.Constants
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Destination
 @Composable
-fun ProductDetailsScreen(productId: Int, navController: NavHostController) {
-    val productViewModel: ProductDetailsViewModel = hiltViewModel()
-    LaunchedEffect(Unit) {
-        productViewModel.getProduct(productId = productId)
-    }
-    productViewModel.productModel?.let {
+fun ProductDetailsScreen(destinationsNavigator: DestinationsNavigator, product: ProductModel) {
+    product.let {
         Scaffold(topBar = {
             CustomTopBar(
-                navController= navController,
                 title = stringResource(id = R.string.products_details_page_title),
-                canGoBack = true
+                destinationsNavigator = destinationsNavigator,
+                canGoBack = true,
+                showShoppingCart = true,
+                showProfile = false
             )
         }
         ) { paddingValues ->
@@ -80,7 +77,7 @@ fun ProductDetailsScreen(productId: Int, navController: NavHostController) {
                     ) {
                         Card(
                             modifier = Modifier
-                                .padding(dimensionResource(id = R.dimen.padding_medium_20)),
+                                .padding(dimensionResource(id = R.dimen.padding_medium_horizontal)),
                             colors = CardDefaults.cardColors(containerColor = White),
                             shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_large)),
                             elevation = CardDefaults.cardElevation(

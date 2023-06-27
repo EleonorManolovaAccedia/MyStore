@@ -48,16 +48,21 @@ import com.example.mystore.R
 import com.example.mystore.util.hasDigits
 import com.example.mystore.util.isOverSevenCharacters
 import com.example.mystore.model.LoginModel
+import com.example.mystore.ui.NavGraphs
 import com.example.mystore.ui.shared.SubmitButton
 import com.example.mystore.ui.theme.DarkPurple
 import com.example.mystore.ui.theme.DarkRed
 import com.example.mystore.ui.theme.White
 import com.example.mystore.util.isValidEmail
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-
+@RootNavGraph(start = true)
+@Destination
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navigateToHomeScreen: () -> Unit = {}) {
+fun LoginScreen(destinationsNavigator: DestinationsNavigator) {
     var emailField by remember { mutableStateOf("") }
     var isEmailValid by remember { mutableStateOf(false) }
     var passwordField by remember { mutableStateOf("") }
@@ -186,10 +191,10 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit = {}) {
                     ) && isButtonEnabled,
                     onClick = {
                         isButtonEnabled = false
-                        loginViewModel.login(
-                            LoginModel(emailField, passwordField),
-                            navigateToHomeScreen
-                        )
+                        loginViewModel.login(LoginModel(emailField, passwordField))
+                        {
+                            destinationsNavigator.navigate(NavGraphs.home)
+                        }
                         isButtonEnabled = true
                         passwordField = ""
                     },

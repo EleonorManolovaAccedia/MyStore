@@ -1,5 +1,6 @@
 package com.example.mystore.networking
 
+import com.example.mystore.model.CategoryDetailsModel
 import com.example.mystore.model.LoginModel
 import com.example.mystore.model.LoginResponse
 import com.example.mystore.model.ProductModel
@@ -17,4 +18,7 @@ interface API {
 
     @GET(value = "products?populate=*")
     suspend fun getProducts(): List<ProductModel>
+
+    @GET(value = "categories")
+    suspend fun getCategories(): List<CategoryDetailsModel>
 }

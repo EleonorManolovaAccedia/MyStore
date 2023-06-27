@@ -4,7 +4,7 @@
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_small_15">15dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
-    <dimen name="padding_medium_20">20dp</dimen>
+    <dimen name="padding_medium_horizontal">20dp</dimen>
     <dimen name="padding_medium_25">25dp</dimen>
     <dimen name="padding_large">30dp</dimen>
     <dimen name="padding_bottom_title">17dp</dimen>
@@ -34,4 +34,5 @@
     <dimen name="product_image_size">130dp</dimen>
     <dimen name="products_top">113dp</dimen>
     <dimen name="thickness_small">1dp</dimen>
+    <dimen name="arrow_drop_down">40dp</dimen>
 </resources>

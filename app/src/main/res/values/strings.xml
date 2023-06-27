@@ -13,4 +13,11 @@
     <string name="new_product_title">New products</string>
     <string name="search_placeholder">Search</string>
     <string name="home_page_title">Home</string>
+
+    <string name="all_categories_filter">All categories</string>
+    <string name="category">Category</string>
+    <string name="filters">Filters</string>
+    <string name="price_range">Price range</string>
+    <string name="product_rating">Product rating</string>
+    <string name="save">Save</string>
 </resources>

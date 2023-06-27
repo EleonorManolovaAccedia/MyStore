@@ -17,7 +17,7 @@ fun LoadingBar(isDisplayed: Boolean) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = dimensionResource(id = R.dimen.padding_medium_20)),
+                .padding(top = dimensionResource(id = R.dimen.padding_medium_horizontal)),
             horizontalArrangement = Arrangement.Center
         ) {
             CircularProgressIndicator(
