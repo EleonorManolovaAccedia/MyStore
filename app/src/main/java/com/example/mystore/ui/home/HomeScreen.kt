@@ -38,7 +38,7 @@ fun HomeScreen(destinationsNavigator: DestinationsNavigator) {
             destinationsNavigator = destinationsNavigator,
             showShoppingCart = true,
             showProfile = true,
-            shoppingCartCount = viewModel.shoppingCartCount(),
+            shoppingCartCount = viewModel.shoppingCartCount,
         )
     }
     ) { paddingValues ->

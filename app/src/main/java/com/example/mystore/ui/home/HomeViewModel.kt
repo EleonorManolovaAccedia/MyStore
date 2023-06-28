@@ -37,8 +37,7 @@ class HomeViewModel @Inject constructor(
     }
     var filtersCount by mutableIntStateOf(3)
     var filtersModel = FiltersModel(priceStartRange, priceEndRange, rating, selectedCategories)
-
-    fun shoppingCartCount(): Int = dataStoreRepository.getShoppingCart().count()
+    var shoppingCartCount = dataStoreRepository.getShoppingCart().count()
 
     init {
         getProducts()

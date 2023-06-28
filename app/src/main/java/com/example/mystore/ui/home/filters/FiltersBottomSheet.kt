@@ -128,7 +128,6 @@ fun FiltersBottomSheet(
 
             CustomDivider(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.padding_large))
             )
             Text(
@@ -145,7 +144,6 @@ fun FiltersBottomSheet(
             }
             CustomDivider(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.padding_large))
             )
             Text(

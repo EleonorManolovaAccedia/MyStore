@@ -27,7 +27,7 @@ import com.example.mystore.model.ShoppingCartModel
 import com.example.mystore.ui.shared.CustomDivider
 import com.example.mystore.ui.theme.Black
 import com.example.mystore.ui.theme.Gray
-import java.text.NumberFormat
+import com.example.mystore.util.convertToUsCurrency
 
 @Composable
 fun ShoppingCartRow(
@@ -55,8 +55,7 @@ fun ShoppingCartRow(
             )
 
             Text(
-                text = NumberFormat.getCurrencyInstance()
-                    .format(cartModel.price),
+                text = cartModel.price.convertToUsCurrency(),
                 color = Black,
                 style = MaterialTheme.typography.labelMedium,
             )
@@ -76,5 +75,8 @@ fun ShoppingCartRow(
                     .clickable { onClick() })
         }
     }
-    CustomDivider()
+    CustomDivider(
+        modifier = Modifier
+            .padding(vertical = dimensionResource(id = R.dimen.padding_small_15))
+    )
 }

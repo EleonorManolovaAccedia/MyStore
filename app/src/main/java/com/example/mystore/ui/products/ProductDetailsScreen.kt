@@ -46,16 +46,20 @@ import com.example.mystore.util.Constants
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination
+data class ProductDetailsNavArgs(
+    val product: ProductModel,
+)
+
+@Destination(
+    navArgsDelegate = ProductDetailsNavArgs::class,
+)
 @Composable
 fun ProductDetailsScreen(
-    destinationsNavigator: DestinationsNavigator,
-    product: ProductModel
+    destinationsNavigator: DestinationsNavigator
 ) {
     val viewModel: ProductDetailsViewModel = hiltViewModel()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        viewModel.setStock(product)
         viewModel
             .toastMessage
             .collect { message ->
@@ -66,7 +70,7 @@ fun ProductDetailsScreen(
                 ).show()
             }
     }
-    product.let {
+    viewModel.product.let {
         Scaffold(topBar = {
             CustomTopBar(
                 title = stringResource(id = R.string.products_details_page_title),
@@ -176,7 +180,7 @@ fun ProductDetailsScreen(
                 )
                 SubmitButton(
                     enabled = viewModel.hasStock,
-                    onClick = { viewModel.addProductToCart(product) },
+                    onClick = { viewModel.addProductToCart() },
                     buttonText = stringResource(id = R.string.add_to_cart_label)
                 ) {
                     Icon(

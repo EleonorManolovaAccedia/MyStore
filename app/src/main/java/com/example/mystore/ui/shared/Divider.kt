@@ -1,7 +1,6 @@
 package com.example.mystore.ui.shared
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,10 +12,7 @@ import com.example.mystore.ui.theme.LightGray40
 
 @Composable
 fun CustomDivider(
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = dimensionResource(id = R.dimen.padding_small_15))
-        .padding(bottom = dimensionResource(id = R.dimen.padding_small_15)),
+    modifier: Modifier = Modifier,
     color: Color = LightGray40,
     thickness: Dp = dimensionResource(id = R.dimen.thickness_small)
 ) {
@@ -24,6 +20,8 @@ fun CustomDivider(
     Divider(
         color = color,
         thickness = thickness,
-        modifier = modifier
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier)
     )
 }

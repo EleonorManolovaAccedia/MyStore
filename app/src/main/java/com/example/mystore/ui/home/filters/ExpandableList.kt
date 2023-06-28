@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.mystore.R
@@ -47,10 +48,18 @@ fun ExpandableList(
     onFiltersChanged: (CategoryDetailsModel) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedCategoriesString = stringResource(id = R.string.all_categories_filter)
-    val filteredCategories = data.filter { selectedCategories.contains(it.name) }
-    if (filteredCategories.isNotEmpty() && filteredCategories.count() != data.count()) {
-        selectedCategoriesString = filteredCategories.joinToString { it.name }
+
+    val context = LocalContext.current
+    val filteredCategories: () -> List<CategoryDetailsModel> = {
+        data.filter { selectedCategories.contains(it.name) }
+    }
+
+    val selectedCategoriesString: () -> String = {
+        if (filteredCategories().isNotEmpty() && filteredCategories().count() != data.count()) {
+            filteredCategories().joinToString { it.name }
+        } else {
+            context.getString(R.string.all_categories_filter)
+        }
     }
 
     val rotateState = animateFloatAsState(
@@ -82,7 +91,7 @@ fun ExpandableList(
                         color = Black
                     )
                     Text(
-                        text = selectedCategoriesString,
+                        text = selectedCategoriesString(),
                         style = MaterialTheme.typography.labelMedium,
                         color = Gray
                     )

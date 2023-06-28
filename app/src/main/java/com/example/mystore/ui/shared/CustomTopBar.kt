@@ -44,7 +44,9 @@ fun CustomTopBar(
         },
         navigationIcon = {
             if (canGoBack)
-                IconButton(onClick = { destinationsNavigator.navigateUp() })
+                IconButton(onClick = {
+                    destinationsNavigator.navigateUp()
+                })
                 {
                     Icon(
                         modifier = Modifier

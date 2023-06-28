@@ -30,9 +30,9 @@ import com.example.mystore.ui.shared.SubmitButton
 import com.example.mystore.ui.shoppingcart.layouts.EmptyShoppingCart
 import com.example.mystore.ui.shoppingcart.layouts.ShoppingCartRow
 import com.example.mystore.ui.theme.Black
+import com.example.mystore.util.convertToUsCurrency
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import java.text.NumberFormat
 
 @ShoppingCartNavGraph(start = true)
 @Destination
@@ -99,13 +99,7 @@ fun ShoppingCardScreen(destinationsNavigator: DestinationsNavigator) {
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        text = "${stringResource(id = R.string.total_label)}: ${
-                            NumberFormat
-                                .getCurrencyInstance()
-                                .format(
-                                    viewModel.cartItems.sumOf { it.quantity * it.price }
-                                )
-                        }",
+                        text = "${stringResource(id = R.string.total_label)}: ${viewModel.cartItems.sumOf { it.quantity * it.price }.convertToUsCurrency()}",
                         color = Black,
                         style = MaterialTheme.typography.bodyLarge
                     )

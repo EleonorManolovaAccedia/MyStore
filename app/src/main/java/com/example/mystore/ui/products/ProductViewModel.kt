@@ -2,33 +2,41 @@ package com.example.mystore.ui.products
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mystore.model.ProductModel
 import com.example.mystore.model.ShoppingCartModel
 import com.example.mystore.repository.IDataStoreRepository
-import com.example.mystore.util.Constants.ERROR_MESSAGE
-import com.example.mystore.util.Constants.SUCCESS_MESSAGE_ADD_TO_CART
+import com.example.mystore.ui.destinations.ProductDetailsScreenDestination
+import com.example.mystore.util.ProductMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
-    private val dataStoreRepository: IDataStoreRepository
+    private val dataStoreRepository: IDataStoreRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    var args= ProductDetailsScreenDestination.argsFrom(savedStateHandle)
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
-    private var stock = 0
-    var hasStock by mutableStateOf(false)
+    var stock = MutableStateFlow(0)
+    var product = args.product
+    val hasStock get() = stock.value > 0
     var shoppingCartCount by mutableIntStateOf(0)
-    fun addProductToCart(product: ProductModel) {
-        if (stock > 0) {
+
+    init {
+        setStock()
+    }
+
+    fun addProductToCart() {
+        if (hasStock) {
             val currentCart = dataStoreRepository.getShoppingCart().toMutableList()
             val element = currentCart.find { it.productId == product.id }
             element?.let {
@@ -47,35 +55,32 @@ class ProductDetailsViewModel @Inject constructor(
 
             val result = dataStoreRepository.saveShoppingCart(currentCart)
             if (result) {
-                stock -= 1
-                hasStock = stock >= 1
+                stock.value -= 1
                 shoppingCartCount = currentCart.count()
-                sendMessage(SUCCESS_MESSAGE_ADD_TO_CART)
+                sendMessage(ProductMessage.SUCCESS_MESSAGE_ADD_TO_CART)
             } else {
-                sendMessage(ERROR_MESSAGE)
+                sendMessage(ProductMessage.ERROR_MESSAGE)
             }
         } else {
-            sendMessage(ERROR_MESSAGE)
+            sendMessage(ProductMessage.ERROR_MESSAGE_OUT_OF_STOCK)
         }
     }
 
-    fun setStock(product: ProductModel) {
-        stock = product.stock
+    private fun setStock() {
+        stock.value = product.stock
 
-        if (stock > 0) {
+        if (hasStock) {
             val cartItems = dataStoreRepository.getShoppingCart()
             val cartItem = cartItems.firstOrNull { it.productId == product.id }
             cartItem?.let {
-                stock -= it.quantity
+                stock.value -= it.quantity
             }
         }
-
-        hasStock = stock > 0
     }
 
-    private fun sendMessage(message: String) {
+    private fun sendMessage(productMessage: ProductMessage) {
         viewModelScope.launch {
-            _toastMessage.emit(message)
+            _toastMessage.emit(productMessage.messages)
         }
     }
 }

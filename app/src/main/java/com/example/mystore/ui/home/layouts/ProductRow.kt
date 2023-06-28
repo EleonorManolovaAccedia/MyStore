@@ -26,7 +26,7 @@ import com.example.mystore.ui.shared.RatingBar
 import com.example.mystore.ui.shared.CustomDivider
 import com.example.mystore.ui.theme.Gray
 import com.example.mystore.ui.theme.Black
-import java.text.NumberFormat
+import com.example.mystore.util.convertToUsCurrency
 
 @Composable
 fun ProductRow(
@@ -73,19 +73,21 @@ fun ProductRow(
                 RatingBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end= dimensionResource(id = R.dimen.padding_right_rating)),
+                        .padding(end = dimensionResource(id = R.dimen.padding_right_rating)),
                     rating = product.rating
                 )
 
                 Text(
-                    text = NumberFormat.getCurrencyInstance()
-                        .format(product.price),
+                    text = product.price.toDouble().convertToUsCurrency(),
                     color = Black,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_small))
                 )
             }
         }
-        CustomDivider()
+        CustomDivider(
+            modifier = Modifier
+                .padding(vertical = dimensionResource(id = R.dimen.padding_small_15))
+        )
     }
 }

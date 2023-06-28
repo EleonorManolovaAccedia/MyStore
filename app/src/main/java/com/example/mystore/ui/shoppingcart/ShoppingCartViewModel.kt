@@ -6,10 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mystore.model.OrderModel
 import com.example.mystore.model.ShoppingCartModel
 import com.example.mystore.repository.IDataStoreRepository
-import com.example.mystore.util.Constants.ERROR_MESSAGE
-import com.example.mystore.util.Constants.ERROR_MESSAGE_CHECKOUT
-import com.example.mystore.util.Constants.SUCCESS_MESSAGE_CHECKOUT
-import com.example.mystore.util.Constants.SUCCESS_MESSAGE_REMOVE_FROM_CART
+import com.example.mystore.util.ShoppingCartMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -33,10 +30,10 @@ class ShoppingCartViewModel @Inject constructor(
     fun checkout(onSuccess: () -> Unit = {}) {
         if (dataStoreRepository.saveOrder(OrderModel(Date(), cartItems))) {
             dataStoreRepository.clearItem("cart")
-            sendMessage(SUCCESS_MESSAGE_CHECKOUT)
+            sendMessage(ShoppingCartMessage.SUCCESS_MESSAGE_CHECKOUT)
             onSuccess.invoke()
         } else {
-            sendMessage(ERROR_MESSAGE_CHECKOUT)
+            sendMessage(ShoppingCartMessage.ERROR_MESSAGE_CHECKOUT)
         }
     }
 
@@ -44,10 +41,10 @@ class ShoppingCartViewModel @Inject constructor(
         cartItems.remove(cartItem)
         val result = dataStoreRepository.saveShoppingCart(cartItems)
         if (result) {
-            sendMessage(SUCCESS_MESSAGE_REMOVE_FROM_CART)
+            sendMessage(ShoppingCartMessage.SUCCESS_MESSAGE_REMOVE_FROM_CART)
         } else {
             cartItems.add(cartItem)
-            sendMessage(ERROR_MESSAGE)
+            sendMessage(ShoppingCartMessage.ERROR_MESSAGE)
         }
     }
 
@@ -58,9 +55,9 @@ class ShoppingCartViewModel @Inject constructor(
         }
     }
 
-    private fun sendMessage(message: String) {
+    private fun sendMessage(message: ShoppingCartMessage) {
         viewModelScope.launch {
-            _toastMessage.emit(message)
+            _toastMessage.emit(message.messages)
         }
     }
 }
