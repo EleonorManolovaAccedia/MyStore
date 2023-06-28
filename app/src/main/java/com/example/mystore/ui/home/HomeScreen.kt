@@ -37,7 +37,8 @@ fun HomeScreen(destinationsNavigator: DestinationsNavigator) {
             title = stringResource(id = R.string.home_page_title),
             destinationsNavigator = destinationsNavigator,
             showShoppingCart = true,
-            showProfile = true
+            showProfile = true,
+            shoppingCartCount = viewModel.shoppingCartCount,
         )
     }
     ) { paddingValues ->

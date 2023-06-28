@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,12 +32,10 @@ import androidx.compose.ui.res.stringResource
 import com.example.mystore.R
 import com.example.mystore.model.CategoryDetailsModel
 import com.example.mystore.model.FiltersModel
-import com.example.mystore.ui.products.layouts.RatingBar
+import com.example.mystore.ui.shared.RatingBar
+import com.example.mystore.ui.shared.CustomDivider
 import com.example.mystore.ui.theme.Black
 import com.example.mystore.ui.theme.DarkGray
-import com.example.mystore.ui.theme.LightGray20
-import com.example.mystore.ui.theme.LightGray40
-import com.example.mystore.ui.theme.LightGray60
 import com.example.mystore.ui.theme.Purple60
 import com.example.mystore.ui.theme.White
 import com.example.mystore.util.Constants.MAX_PRICE
@@ -129,11 +126,8 @@ fun FiltersBottomSheet(
                 }
             }
 
-            Divider(
-                color = LightGray20,
-                thickness = dimensionResource(id = R.dimen.thickness_small),
+            CustomDivider(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.padding_large))
             )
             Text(
@@ -148,19 +142,8 @@ fun FiltersBottomSheet(
             ) {
                 range = it.start.roundToInt().toFloat()..it.endInclusive.roundToInt().toFloat()
             }
-            Divider(
-                color = LightGray40,
-                thickness = dimensionResource(id = R.dimen.thickness_small),
+            CustomDivider(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = dimensionResource(id = R.dimen.padding_small_15))
-                    .padding(bottom = dimensionResource(id = R.dimen.padding_small_15))
-            )
-            Divider(
-                color = LightGray60,
-                thickness = dimensionResource(id = R.dimen.thickness_small),
-                modifier = Modifier
-                    .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.padding_large))
             )
             Text(
@@ -171,8 +154,12 @@ fun FiltersBottomSheet(
             )
             RatingBar(
                 rating = rating,
-                onChange = { rating = it },
+                onChange = {
+                    rating = it
+                    currentFilters.rating = it
+                },
                 canChange = true,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

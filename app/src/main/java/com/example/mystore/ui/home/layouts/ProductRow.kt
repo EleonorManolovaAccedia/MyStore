@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
 import com.example.mystore.R
 import com.example.mystore.model.ProductModel
-import com.example.mystore.ui.products.layouts.RatingBar
+import com.example.mystore.ui.shared.RatingBar
+import com.example.mystore.ui.shared.CustomDivider
 import com.example.mystore.ui.theme.Gray
-import com.example.mystore.ui.theme.LightGray40
 import com.example.mystore.ui.theme.Black
-import java.text.NumberFormat
-import java.util.Locale
+import com.example.mystore.util.convertToUsCurrency
 
 @Composable
 fun ProductRow(
@@ -75,27 +73,21 @@ fun ProductRow(
                 RatingBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end= dimensionResource(id = R.dimen.padding_large)),
+                        .padding(end = dimensionResource(id = R.dimen.padding_right_rating)),
                     rating = product.rating
                 )
 
                 Text(
-                    text = NumberFormat.getCurrencyInstance(Locale("en", "US"))
-                        .format(product.price),
+                    text = product.price.toDouble().convertToUsCurrency(),
                     color = Black,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_small))
                 )
             }
         }
-
-        Divider(
-            color = LightGray40,
-            thickness = dimensionResource(id = R.dimen.thickness_small),
+        CustomDivider(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = dimensionResource(id = R.dimen.padding_small_15))
-                .padding(bottom = dimensionResource(id = R.dimen.padding_small_15))
+                .padding(vertical = dimensionResource(id = R.dimen.padding_small_15))
         )
     }
 }

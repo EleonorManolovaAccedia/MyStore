@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.mystore.ui.theme.Black
-import java.text.NumberFormat
+import com.example.mystore.util.convertToUsCurrency
 
 @Composable
 fun RangeSlider(
@@ -28,14 +28,12 @@ fun RangeSlider(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = NumberFormat.getCurrencyInstance()
-                .format(range.start),
+            text = range.start.toDouble().convertToUsCurrency(),
             color = Black,
             style = MaterialTheme.typography.bodyLarge
         )
         Text(
-            text = NumberFormat.getCurrencyInstance()
-                .format(range.endInclusive),
+            text = range.endInclusive.toDouble().convertToUsCurrency(),
             color = Black,
             style = MaterialTheme.typography.bodyLarge
         )

@@ -63,3 +63,9 @@ class MainActivity : ComponentActivity() {
 annotation class HomeNavGraph(
     val start: Boolean = false
 )
+
+@RootNavGraph
+@NavGraph
+annotation class ShoppingCartNavGraph(
+    val start: Boolean = false
+)

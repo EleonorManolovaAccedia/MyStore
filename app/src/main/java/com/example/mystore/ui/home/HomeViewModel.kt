@@ -13,13 +13,15 @@ import com.example.mystore.model.CategoryDetailsModel
 import com.example.mystore.model.FiltersModel
 import com.example.mystore.model.ProductModel
 import com.example.mystore.repository.IApiRepository
+import com.example.mystore.repository.IDataStoreRepository
 import com.example.mystore.util.containsString
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val apiRepository: IApiRepository
+    private val apiRepository: IApiRepository,
+    private val dataStoreRepository: IDataStoreRepository
 ) : ViewModel() {
     private var allProducts = mutableStateListOf<ProductModel>()
     var products = mutableStateListOf<ProductModel>()
@@ -35,6 +37,7 @@ class HomeViewModel @Inject constructor(
     }
     var filtersCount by mutableIntStateOf(3)
     var filtersModel = FiltersModel(priceStartRange, priceEndRange, rating, selectedCategories)
+    var shoppingCartCount = dataStoreRepository.getShoppingCart().count()
 
     init {
         getProducts()
