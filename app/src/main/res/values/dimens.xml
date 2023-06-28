@@ -13,6 +13,7 @@
     <dimen name="padding_top_logo">150dp</dimen>
     <dimen name="padding_top_medium_20">20dp</dimen>
     <dimen name="padding_top_title">310dp</dimen>
+    <dimen name="padding_right_rating">110dp</dimen>
 
     <dimen name="image_size">300dp</dimen>
 
@@ -35,4 +36,5 @@
     <dimen name="products_top">113dp</dimen>
     <dimen name="thickness_small">1dp</dimen>
     <dimen name="arrow_drop_down">40dp</dimen>
+    <dimen name="shopping_cart_icon">56sp</dimen>
 </resources>

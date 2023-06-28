@@ -1,12 +1,19 @@
 package com.example.mystore.di
 
+import android.content.Context
 import com.example.mystore.TokenManager
 import com.example.mystore.networking.API
 import com.example.mystore.repository.ApiRepository
+import com.example.mystore.repository.DataStoreRepository
 import com.example.mystore.repository.IApiRepository
+import com.example.mystore.repository.IDataStoreRepository
+import com.example.mystore.util.Constants.BASE_URL
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,7 +26,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiModule {
     private val DEFAULT_TIMEOUT = 1L
-    private const val BASE_URL = "https://ethereal-artefacts.fly.dev/api/"
 
     @Singleton
     @Provides
@@ -66,4 +72,16 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideServiceInterceptor(tokenManager: TokenManager) = ServiceInterceptor(tokenManager)
+
+    @Singleton
+    @Provides
+    fun provideGson(): Gson = GsonBuilder().create()
+
+    @Singleton
+    @Provides
+    fun provideDataStoreRepository(
+        @ApplicationContext context: Context,
+        gson: Gson
+    ): IDataStoreRepository = DataStoreRepository(context, gson)
+
 }

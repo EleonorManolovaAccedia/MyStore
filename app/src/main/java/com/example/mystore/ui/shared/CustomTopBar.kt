@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.mystore.R
+import com.example.mystore.ui.NavGraphs
 import com.example.mystore.ui.theme.Gray
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -29,7 +30,8 @@ fun CustomTopBar(
     destinationsNavigator: DestinationsNavigator,
     canGoBack: Boolean = false,
     showShoppingCart: Boolean = false,
-    showProfile: Boolean = false
+    showProfile: Boolean = false,
+    shoppingCartCount: Int = 0,
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -42,7 +44,8 @@ fun CustomTopBar(
         },
         navigationIcon = {
             if (canGoBack)
-                IconButton(onClick = { destinationsNavigator.navigateUp() }) {
+                IconButton(onClick = { destinationsNavigator.navigateUp() })
+                {
                     Icon(
                         modifier = Modifier
                             .size(dimensionResource(id = R.dimen.icon_size_large))
@@ -69,7 +72,11 @@ fun CustomTopBar(
                 Box(modifier = Modifier
                     .clickable { }
                     .padding(dimensionResource(id = R.dimen.padding_small_15))) {
-                    IconWithCircle(icon = Icons.Outlined.ShoppingCart, text = "4")
+                    IconWithCircle(
+                        icon = Icons.Outlined.ShoppingCart,
+                        text = if (shoppingCartCount > 0) shoppingCartCount.toString() else "",
+                        onClick = { destinationsNavigator.navigate(NavGraphs.shoppingCart) }
+                    )
                 }
         }
     )

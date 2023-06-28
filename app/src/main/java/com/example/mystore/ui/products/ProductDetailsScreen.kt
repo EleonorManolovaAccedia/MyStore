@@ -1,5 +1,6 @@
 package com.example.mystore.ui.products
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,17 +23,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.mystore.R
 import com.example.mystore.model.ProductModel
 import com.example.mystore.ui.shared.CustomTopBar
-import com.example.mystore.ui.products.layouts.RatingBar
+import com.example.mystore.ui.shared.RatingBar
 import com.example.mystore.ui.shared.SubmitButton
 import com.example.mystore.ui.theme.Gray
 import com.example.mystore.ui.theme.Green40
@@ -44,7 +48,24 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun ProductDetailsScreen(destinationsNavigator: DestinationsNavigator, product: ProductModel) {
+fun ProductDetailsScreen(
+    destinationsNavigator: DestinationsNavigator,
+    product: ProductModel
+) {
+    val viewModel: ProductDetailsViewModel = hiltViewModel()
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.setStock(product)
+        viewModel
+            .toastMessage
+            .collect { message ->
+                Toast.makeText(
+                    context,
+                    message,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+    }
     product.let {
         Scaffold(topBar = {
             CustomTopBar(
@@ -52,7 +73,8 @@ fun ProductDetailsScreen(destinationsNavigator: DestinationsNavigator, product: 
                 destinationsNavigator = destinationsNavigator,
                 canGoBack = true,
                 showShoppingCart = true,
-                showProfile = false
+                showProfile = false,
+                shoppingCartCount = viewModel.shoppingCartCount,
             )
         }
         ) { paddingValues ->
@@ -88,7 +110,7 @@ fun ProductDetailsScreen(destinationsNavigator: DestinationsNavigator, product: 
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.End
                             ) {
-                                if (it.stock > 0) {
+                                if (viewModel.hasStock) {
                                     Icon(
                                         modifier = Modifier
                                             .size(dimensionResource(id = R.dimen.icon_size))
@@ -147,14 +169,14 @@ fun ProductDetailsScreen(destinationsNavigator: DestinationsNavigator, product: 
                 )
                 Text(
                     modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_bottom_medium)),
-                    text = "$${it.price}",
+                    text = "$${String.format("%.2f", it.price)}",
                     style = MaterialTheme.typography.displayMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
                 SubmitButton(
-                    enabled = it.stock > 0,
-                    onClick = { },
+                    enabled = viewModel.hasStock,
+                    onClick = { viewModel.addProductToCart(product) },
                     buttonText = stringResource(id = R.string.add_to_cart_label)
                 ) {
                     Icon(

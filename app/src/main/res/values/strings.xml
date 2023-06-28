@@ -19,5 +19,13 @@
     <string name="filters">Filters</string>
     <string name="price_range">Price range</string>
     <string name="product_rating">Product rating</string>
+    <string name="product_label">Product</string>
     <string name="save">Save</string>
+
+    <string name="shopping_card_page_title">Cart</string>
+    <string name="check_out_label">Check out</string>
+    <string name="total_label">Total</string>
+    <string name="items_label">Items</string>
+    <string name="empty_cart_label">Your cart is empty. Go to our products</string>
+    <string name="delete_label">Delete</string>
 </resources>

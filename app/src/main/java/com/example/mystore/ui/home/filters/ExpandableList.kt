@@ -47,13 +47,11 @@ fun ExpandableList(
     onFiltersChanged: (CategoryDetailsModel) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val selectedCategoriesString: String = stringResource(id = R.string.all_categories_filter)
-    val filteredCategories2: List<CategoryDetailsModel> =
-        data.filter { selectedCategoriesString.contains(it.name) }
-    if (filteredCategories2.isNotEmpty() && filteredCategories2.count() != data.count()) {
-        filteredCategories2.joinToString { it.name }
-    } 
-
+    var selectedCategoriesString = stringResource(id = R.string.all_categories_filter)
+    val filteredCategories = data.filter { selectedCategories.contains(it.name) }
+    if (filteredCategories.isNotEmpty() && filteredCategories.count() != data.count()) {
+        selectedCategoriesString = filteredCategories.joinToString { it.name }
+    }
 
     val rotateState = animateFloatAsState(
         targetValue = if (expanded) MAX_ROTATE else MIN_ROTATE,
@@ -108,7 +106,7 @@ fun ExpandableList(
             ) {
                 items(data) { category ->
                     DropDownRow(
-                        modifier =  Modifier
+                        modifier = Modifier
                             .padding(dimensionResource(id = R.dimen.padding_medium_horizontal))
                             .fillMaxWidth()
                             .clickable { onFiltersChanged(category) },
