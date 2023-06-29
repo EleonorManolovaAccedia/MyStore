@@ -69,3 +69,9 @@ annotation class HomeNavGraph(
 annotation class ShoppingCartNavGraph(
     val start: Boolean = false
 )
+
+@RootNavGraph
+@NavGraph
+annotation class ProfileNavGraph(
+    val start: Boolean = false
+)

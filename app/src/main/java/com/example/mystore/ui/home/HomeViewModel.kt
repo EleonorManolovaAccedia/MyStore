@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +14,8 @@ import com.example.mystore.model.ProductModel
 import com.example.mystore.repository.IApiRepository
 import com.example.mystore.repository.IDataStoreRepository
 import com.example.mystore.util.containsString
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,12 +24,12 @@ class HomeViewModel @Inject constructor(
     private val apiRepository: IApiRepository,
     private val dataStoreRepository: IDataStoreRepository
 ) : ViewModel() {
-    private var allProducts = mutableStateListOf<ProductModel>()
-    var products = mutableStateListOf<ProductModel>()
-    var isLoading by mutableStateOf(false)
-    var categories = mutableStateListOf<CategoryDetailsModel>()
+    private var allProducts = MutableStateFlow(emptyList<ProductModel>())
+    var products = MutableStateFlow(emptyList<ProductModel>())
+    var isLoading = MutableStateFlow(false)
+    var categories = MutableStateFlow(emptyList<CategoryDetailsModel>())
+    var input = MutableStateFlow("")
 
-    var input by mutableStateOf("")
     private var priceStartRange by mutableFloatStateOf(20f)
     private var priceEndRange by mutableFloatStateOf(150f)
     private var rating by mutableIntStateOf(4)
@@ -37,7 +38,8 @@ class HomeViewModel @Inject constructor(
     }
     var filtersCount by mutableIntStateOf(3)
     var filtersModel = FiltersModel(priceStartRange, priceEndRange, rating, selectedCategories)
-    var shoppingCartCount = dataStoreRepository.getShoppingCart().count()
+    val shoppingCartCount
+        get() = dataStoreRepository.getShoppingCart().count()
 
     init {
         getProducts()
@@ -45,30 +47,24 @@ class HomeViewModel @Inject constructor(
     }
 
     fun filterProducts(newInput: String? = null) {
-        products.apply {
-            clear()
-            addAll(allProducts.filter {
-                it.price in (priceStartRange..priceEndRange) && it.rating <= rating
-            })
-        }
+        products.update { emptyList() }
+        products.update { allProducts.value.filter { it.price in (priceStartRange..priceEndRange) && it.rating <= rating } }
 
-        if (selectedCategories.isNotEmpty() && selectedCategories.count() != categories.count()) {
-            products.removeAll(products.filter {
-                !selectedCategories.contains(it.category)
-            })
+        if (selectedCategories.isNotEmpty() && selectedCategories.count() != categories.value.count()) {
+            products.update { products -> products.filter { selectedCategories.contains(it.category) } }
         }
         newInput?.let {
-            input = it
+            input.value = it
         }
 
-        if (input.isNotEmpty()) {
-            products.removeAll(
-                products.filter { product ->
-                    !(product.title.containsString(input) ||
-                            product.short_description.containsString(input) ||
-                            product.category.containsString(input))
+        if (input.value.isNotEmpty()) {
+            products.update {
+                it.filter { product ->
+                    product.title.containsString(input.value) ||
+                            product.short_description.containsString(input.value) ||
+                            product.category.containsString(input.value)
                 }
-            )
+            }
         }
     }
 
@@ -85,34 +81,30 @@ class HomeViewModel @Inject constructor(
     }
 
     fun clearInput() {
-        input = ""
+        input.value = ""
         filterProducts()
     }
 
     private fun getProducts() {
         viewModelScope.launch {
-            isLoading = true
+            isLoading.value = true
 
             try {
-                allProducts.apply {
-                    clear()
-                    addAll(apiRepository.getProducts())
-                }
+                allProducts.update { emptyList() }
+                allProducts.value = apiRepository.getProducts()
                 filterProducts()
             } catch (e: Exception) {
                 println(e)
             }
-            isLoading = false
+            isLoading.value = false
         }
     }
 
     private fun getCategories() {
         viewModelScope.launch {
             try {
-                categories.apply {
-                    clear()
-                    addAll(apiRepository.getCategories())
-                }
+                categories.update { emptyList() }
+                categories.update { apiRepository.getCategories() }
             } catch (e: Exception) {
                 println(e)
             }

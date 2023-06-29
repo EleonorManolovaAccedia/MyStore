@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.mystore.R
 import com.example.mystore.ui.NavGraphs
@@ -50,10 +51,10 @@ fun CustomTopBar(
                 {
                     Icon(
                         modifier = Modifier
-                            .size(dimensionResource(id = R.dimen.icon_size_large))
+                            .size(dimensionResource(id = R.dimen.icon_size_medium))
                             .padding(dimensionResource(id = R.dimen.padding_extra_small)),
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = stringResource(id = R.string.back_label)
                     )
                 }
         },
@@ -62,13 +63,15 @@ fun CustomTopBar(
                 Box(modifier = Modifier
                     .clickable { }
                 ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(dimensionResource(id = R.dimen.icon_size)),
-                        imageVector = Icons.Outlined.AccountCircle,
-                        contentDescription = "Account",
-                        tint = Gray
-                    )
+                    IconButton(onClick = { destinationsNavigator.navigate(NavGraphs.profile) }) {
+                        Icon(
+                            modifier = Modifier
+                                .size(dimensionResource(id = R.dimen.icon_size)),
+                            imageVector = Icons.Outlined.AccountCircle,
+                            contentDescription = stringResource(id = R.string.account_label),
+                            tint = Gray,
+                        )
+                    }
                 }
             if (showShoppingCart)
                 Box(modifier = Modifier
