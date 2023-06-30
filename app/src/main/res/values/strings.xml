@@ -39,4 +39,9 @@
     <string name="details_label">Details</string>
     <string name="receipt_label">Receipt</string>
     <string name="date_label">Date</string>
+    <string name="item_description">item</string>
+    <string name="items_description">items</string>
+
+    <string name="check_out_title">Are you sure?</string>
+    <string name="check_out_description">Are you sure you want to proceed to</string>
 </resources>

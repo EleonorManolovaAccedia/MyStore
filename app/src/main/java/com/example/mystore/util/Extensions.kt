@@ -11,4 +11,4 @@ fun String.hasDigits() = count(Char::isDigit) > 0
 fun String.isValidEmail() = Patterns.EMAIL_ADDRESS.matcher(this).matches()
 fun String.containsString(string: String) = this.lowercase().contains(string.lowercase())
 fun Double.convertToUsCurrency() = (NumberFormat.getCurrencyInstance(Locale.US).format(this))
-fun Date.prase(pattern: String): String = SimpleDateFormat(pattern, Locale.getDefault()).format(this)
+fun Date.parse(pattern: String): String = SimpleDateFormat(pattern, Locale.getDefault()).format(this)

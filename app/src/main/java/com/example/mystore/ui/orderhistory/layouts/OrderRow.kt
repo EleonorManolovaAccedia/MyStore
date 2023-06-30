@@ -17,11 +17,15 @@ import com.example.mystore.model.OrderModel
 import com.example.mystore.ui.shared.CustomDivider
 import com.example.mystore.ui.theme.Black
 import com.example.mystore.ui.theme.Gray
+import com.example.mystore.util.Constants.DATETIME_PATTERN
 import com.example.mystore.util.convertToUsCurrency
-import com.example.mystore.util.prase
+import com.example.mystore.util.parse
 
 @Composable
 fun OrderRow(orderModel: OrderModel) {
+    val itemString = if (orderModel.items.size > 1)
+        stringResource(id = R.string.items_description)
+    else stringResource(id = R.string.item_description)
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -30,14 +34,17 @@ fun OrderRow(orderModel: OrderModel) {
     ) {
         Column {
             Text(
-                text = orderModel.items.size.toString() + (" " + if (orderModel.items.size > 1)
-                    "items" else "item"),
+                text = "${orderModel.items.size} $itemString",
                 color = Black,
                 style = MaterialTheme.typography.labelMedium,
             )
 
             Text(
-                text = "${stringResource(id = R.string.date_label)}: ${orderModel.orderDate.prase("dd.MM.yyyy")}",
+                text = "${stringResource(id = R.string.date_label)}: ${
+                    orderModel.orderDate.parse(
+                        DATETIME_PATTERN
+                    )
+                }",
                 color = Gray,
                 style = MaterialTheme.typography.labelSmall,
             )

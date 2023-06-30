@@ -19,13 +19,15 @@ class ProductDetailsViewModel @Inject constructor(
     private val dataStoreRepository: IDataStoreRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    var args= ProductDetailsScreenDestination.argsFrom(savedStateHandle)
+    private var args = ProductDetailsScreenDestination.argsFrom(savedStateHandle)
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
     var stock = MutableStateFlow(0)
     var product = args.product
-    val hasStock get() = stock.value > 0
+
+    val hasStock
+        get() = MutableStateFlow(stock.value > 0)
     var shoppingCartCount = MutableStateFlow(0)
 
     init {
@@ -33,7 +35,7 @@ class ProductDetailsViewModel @Inject constructor(
     }
 
     fun addProductToCart() {
-        if (hasStock) {
+        if (hasStock.value) {
             val currentCart = dataStoreRepository.getShoppingCart().toMutableList()
             val element = currentCart.find { it.productId == product.id }
             element?.let {
@@ -67,7 +69,7 @@ class ProductDetailsViewModel @Inject constructor(
         stock.value = product.stock
         val cartItems = dataStoreRepository.getShoppingCart()
 
-        if (hasStock) {
+        if (hasStock.value) {
             val cartItem = cartItems.firstOrNull { it.productId == product.id }
             cartItem?.let {
                 stock.value -= it.quantity

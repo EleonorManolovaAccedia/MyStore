@@ -22,9 +22,11 @@ import com.example.mystore.util.Constants.OFFSET
 import com.example.mystore.util.Constants.RADIUS_CAMERA_ICON
 
 @Composable
-fun ProfilePicture() {
+fun ProfilePicture(
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_medium_horizontal))
+        modifier = modifier
     ) {
         Image(
             modifier = Modifier.size(dimensionResource(id = R.dimen.icon_size_large)),

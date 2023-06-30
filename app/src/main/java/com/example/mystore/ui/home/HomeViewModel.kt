@@ -47,8 +47,9 @@ class HomeViewModel @Inject constructor(
     }
 
     fun filterProducts(newInput: String? = null) {
-        products.update { emptyList() }
-        products.update { allProducts.value.filter { it.price in (priceStartRange..priceEndRange) && it.rating <= rating } }
+        products.value =
+            allProducts.value.filter { it.price in (priceStartRange..priceEndRange) && it.rating <= rating }
+
 
         if (selectedCategories.isNotEmpty() && selectedCategories.count() != categories.value.count()) {
             products.update { products -> products.filter { selectedCategories.contains(it.category) } }
@@ -90,7 +91,6 @@ class HomeViewModel @Inject constructor(
             isLoading.value = true
 
             try {
-                allProducts.update { emptyList() }
                 allProducts.value = apiRepository.getProducts()
                 filterProducts()
             } catch (e: Exception) {
@@ -103,8 +103,7 @@ class HomeViewModel @Inject constructor(
     private fun getCategories() {
         viewModelScope.launch {
             try {
-                categories.update { emptyList() }
-                categories.update { apiRepository.getCategories() }
+                categories.value = apiRepository.getCategories()
             } catch (e: Exception) {
                 println(e)
             }

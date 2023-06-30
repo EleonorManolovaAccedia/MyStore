@@ -141,6 +141,11 @@ fun FiltersBottomSheet(
                 valueRange = MIN_PRICE..MAX_PRICE
             ) {
                 range = it.start.roundToInt().toFloat()..it.endInclusive.roundToInt().toFloat()
+                currentFilters
+                    .apply {
+                        priceStart = it.start.roundToInt().toFloat()
+                        priceEnd = it.endInclusive.roundToInt().toFloat()
+                    }
             }
             CustomDivider(
                 modifier = Modifier

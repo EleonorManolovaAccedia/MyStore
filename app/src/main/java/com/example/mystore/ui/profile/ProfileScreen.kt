@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mystore.R
+import com.example.mystore.ui.NavGraphs
 import com.example.mystore.ui.destinations.LoginScreenDestination
 import com.example.mystore.ui.destinations.OrderHistoryScreenDestination
 import com.example.mystore.ui.main.ProfileNavGraph
@@ -36,7 +37,7 @@ import com.example.mystore.ui.theme.Black
 import com.example.mystore.ui.theme.Gray
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-
+import com.ramcosta.composedestinations.navigation.popUpTo
 
 @ProfileNavGraph(start = true)
 @Destination
@@ -44,8 +45,22 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun ProfileScreen(
     destinationsNavigator: DestinationsNavigator
 ) {
-
     val viewModel: ProfileViewModel = hiltViewModel()
+    fun navigateToLogin() {
+        val hasLoginDestination = destinationsNavigator.popBackStack(
+            route = LoginScreenDestination,
+            inclusive = false
+        )
+
+        if (!hasLoginDestination) {
+            destinationsNavigator.navigate(LoginScreenDestination) {
+                popUpTo(NavGraphs.home) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
     Scaffold(topBar = {
         CustomTopBar(
             title = stringResource(id = R.string.profile_page_title),
@@ -70,14 +85,16 @@ fun ProfileScreen(
                 .padding(bottom = dimensionResource(id = R.dimen.padding_large)),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column() {
+            Column {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = dimensionResource(id = R.dimen.padding_large))
                 ) {
-                    ProfilePicture()
+                    ProfilePicture(
+                        modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_medium_horizontal))
+                    )
                     Text(
                         modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_medium_horizontal)),
                         text = viewModel.getEmail(),
@@ -98,7 +115,7 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row() {
+                    Row {
                         Icon(
                             imageVector = Icons.Rounded.Receipt,
                             contentDescription = "Receipt",
@@ -111,7 +128,11 @@ fun ProfileScreen(
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     }
-                    IconButton(onClick = { destinationsNavigator.navigate(OrderHistoryScreenDestination) }) {
+                    IconButton(onClick = {
+                        destinationsNavigator.navigate(
+                            OrderHistoryScreenDestination
+                        )
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.ChevronRight,
                             contentDescription = "Details",
@@ -123,9 +144,7 @@ fun ProfileScreen(
             SubmitButton(
                 enabled = true,
                 onClick = {
-                    viewModel.logout {
-                        destinationsNavigator.navigate(LoginScreenDestination)
-                    }
+                    viewModel.logout(onLogout = { navigateToLogin() })
                 },
                 buttonText = stringResource(id = R.string.log_out_label)
             )

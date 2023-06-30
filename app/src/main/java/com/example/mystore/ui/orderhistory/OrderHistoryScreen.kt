@@ -1,7 +1,6 @@
 package com.example.mystore.ui.orderhistory
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,30 +51,27 @@ fun OrderHistoryScreen(
                 .padding(paddingValues)
                 .padding(horizontal = dimensionResource(id = R.dimen.padding_medium_horizontal))
                 .padding(vertical = dimensionResource(id = R.dimen.padding_large)),
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column() {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+                    .padding(bottom = dimensionResource(id = R.dimen.padding_large))
+            ) {
+                LazyColumn(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding_small))
-                        .padding(bottom = dimensionResource(id = R.dimen.padding_large))
+                        .weight(1f)
                 ) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .weight(1f)
-                    ) {
-                        items(viewModel.orders.toList()) { order ->
-                            OrderRow(order)
-                        }
+                    items(viewModel.orders.toList()) { order ->
+                        OrderRow(order)
                     }
                 }
-                CustomDivider(
-                    modifier = Modifier
-                        .padding(vertical = dimensionResource(id = R.dimen.padding_small))
-                )
             }
+            CustomDivider(
+                modifier = Modifier
+                    .padding(vertical = dimensionResource(id = R.dimen.padding_small))
+            )
         }
     }
 }
