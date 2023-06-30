@@ -1,8 +1,5 @@
 package com.example.mystore.ui.products
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,21 +19,23 @@ class ProductDetailsViewModel @Inject constructor(
     private val dataStoreRepository: IDataStoreRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    var args= ProductDetailsScreenDestination.argsFrom(savedStateHandle)
+    private var args = ProductDetailsScreenDestination.argsFrom(savedStateHandle)
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
     var stock = MutableStateFlow(0)
     var product = args.product
-    val hasStock get() = stock.value > 0
-    var shoppingCartCount by mutableIntStateOf(0)
+
+    val hasStock
+        get() = MutableStateFlow(stock.value > 0)
+    var shoppingCartCount = MutableStateFlow(0)
 
     init {
         setStock()
     }
 
     fun addProductToCart() {
-        if (hasStock) {
+        if (hasStock.value) {
             val currentCart = dataStoreRepository.getShoppingCart().toMutableList()
             val element = currentCart.find { it.productId == product.id }
             element?.let {
@@ -56,7 +55,7 @@ class ProductDetailsViewModel @Inject constructor(
             val result = dataStoreRepository.saveShoppingCart(currentCart)
             if (result) {
                 stock.value -= 1
-                shoppingCartCount = currentCart.count()
+                shoppingCartCount.value = currentCart.count()
                 sendMessage(ProductMessage.SUCCESS_MESSAGE_ADD_TO_CART)
             } else {
                 sendMessage(ProductMessage.ERROR_MESSAGE)
@@ -68,14 +67,16 @@ class ProductDetailsViewModel @Inject constructor(
 
     private fun setStock() {
         stock.value = product.stock
+        val cartItems = dataStoreRepository.getShoppingCart()
 
-        if (hasStock) {
-            val cartItems = dataStoreRepository.getShoppingCart()
+        if (hasStock.value) {
             val cartItem = cartItems.firstOrNull { it.productId == product.id }
             cartItem?.let {
                 stock.value -= it.quantity
             }
         }
+
+        shoppingCartCount.value = cartItems.size
     }
 
     private fun sendMessage(productMessage: ProductMessage) {

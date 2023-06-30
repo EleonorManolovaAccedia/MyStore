@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
@@ -31,6 +33,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun HomeScreen(destinationsNavigator: DestinationsNavigator) {
     val viewModel: HomeViewModel = hiltViewModel()
+    val products by viewModel.products.collectAsState()
+    val categories by viewModel.categories.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val input by viewModel.input.collectAsState()
 
     Scaffold(topBar = {
         CustomTopBar(
@@ -55,7 +61,7 @@ fun HomeScreen(destinationsNavigator: DestinationsNavigator) {
                 .padding(horizontal = dimensionResource(id = R.dimen.padding_medium_horizontal))
         ) {
             Search(
-                input = viewModel.input,
+                input = input,
                 onInputChanged = { viewModel.filterProducts(it) },
                 onInputCleared = { viewModel.clearInput() }
             )
@@ -63,18 +69,18 @@ fun HomeScreen(destinationsNavigator: DestinationsNavigator) {
             Filter(
                 filtersCount = viewModel.filtersCount,
                 currentFilters = viewModel.filtersModel,
-                categories = viewModel.categories
+                categories = categories
             ) {
                 viewModel.setFilters(it)
             }
             Box(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.products_top))) {
-                LoadingBar(isDisplayed = viewModel.isLoading)
+                LoadingBar(isDisplayed = isLoading)
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    items(viewModel.products.toList()) { product ->
+                    items(products.toList()) { product ->
                         ProductRow(product) {
                             destinationsNavigator.navigate(
                                 ProductDetailsScreenDestination(product)

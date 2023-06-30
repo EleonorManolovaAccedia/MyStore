@@ -24,6 +24,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,6 +61,8 @@ fun ProductDetailsScreen(
 ) {
     val viewModel: ProductDetailsViewModel = hiltViewModel()
     val context = LocalContext.current
+    val hasStock by viewModel.hasStock.collectAsState()
+    val shoppingCartCount by viewModel.shoppingCartCount.collectAsState()
     LaunchedEffect(Unit) {
         viewModel
             .toastMessage
@@ -78,7 +82,7 @@ fun ProductDetailsScreen(
                 canGoBack = true,
                 showShoppingCart = true,
                 showProfile = false,
-                shoppingCartCount = viewModel.shoppingCartCount,
+                shoppingCartCount = shoppingCartCount,
             )
         }
         ) { paddingValues ->
@@ -114,7 +118,7 @@ fun ProductDetailsScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.End
                             ) {
-                                if (viewModel.hasStock) {
+                                if (hasStock) {
                                     Icon(
                                         modifier = Modifier
                                             .size(dimensionResource(id = R.dimen.icon_size))
@@ -179,7 +183,7 @@ fun ProductDetailsScreen(
                     )
                 )
                 SubmitButton(
-                    enabled = viewModel.hasStock,
+                    enabled = hasStock,
                     onClick = { viewModel.addProductToCart() },
                     buttonText = stringResource(id = R.string.add_to_cart_label)
                 ) {

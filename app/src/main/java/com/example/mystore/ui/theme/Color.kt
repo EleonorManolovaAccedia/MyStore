@@ -14,7 +14,7 @@ var DarkGray = Color(0xFF222227)
 var LightGray = Color(0xFFD8D9DB)
 var LightGray20 = Color(0xFFC4C4C4)
 var LightGray40 = Color(0xFF898889)
-var LightGray60 = Color(0xFFEFF1F5)
 var LightPink = Color(0xFFECE6F0)
+var LightPink20 = Color(0xFFE0DCE7)
 var Black = Color(0xFF000000)
 

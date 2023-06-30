@@ -9,6 +9,7 @@ import com.example.mystore.TokenManager
 import com.example.mystore.model.LoginModel
 import com.example.mystore.model.LoginResponse
 import com.example.mystore.repository.IApiRepository
+import com.example.mystore.repository.IDataStoreRepository
 import com.example.mystore.util.hasDigits
 import com.example.mystore.util.isOverSevenCharacters
 import com.example.mystore.util.isValidEmail
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val repository: IApiRepository,
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager,
+    private val dataStoreRepository: IDataStoreRepository
 ) : ViewModel() {
     var error: String? by mutableStateOf(null)
     private var loginResponse by mutableStateOf<LoginResponse?>(null)
@@ -31,6 +33,12 @@ class LoginViewModel @Inject constructor(
             try {
                 loginResponse = repository.login(loginModel)
                 loginResponse?.jwt?.let { jwtToken -> tokenManager.saveToken(jwtToken) }
+                loginResponse?.user?.let { user ->
+                    dataStoreRepository.putItem(
+                        "email",
+                        user.email
+                    )
+                }
                 onLogin.invoke()
             } catch (e: HttpException) {
                 error =

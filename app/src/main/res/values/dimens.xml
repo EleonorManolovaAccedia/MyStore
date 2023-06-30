@@ -18,7 +18,8 @@
     <dimen name="image_size">300dp</dimen>
 
     <dimen name="icon_size">30dp</dimen>
-    <dimen name="icon_size_large">50dp</dimen>
+    <dimen name="icon_size_medium">50dp</dimen>
+    <dimen name="icon_size_large">100dp</dimen>
 
     <dimen name="elevation">10dp</dimen>
 

@@ -8,4 +8,6 @@ object Constants {
     const val MIN_ROTATE = 0f
     const val MAX_ROTATE = 180f
     const val OFFSET = 20
+    const val RADIUS_CAMERA_ICON = 45f
+    const val DATETIME_PATTERN = "dd.MM.yyyy"
 }

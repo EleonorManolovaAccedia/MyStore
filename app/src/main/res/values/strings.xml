@@ -28,4 +28,20 @@
     <string name="items_label">Items</string>
     <string name="empty_cart_label">Your cart is empty. Go to our products</string>
     <string name="delete_label">Delete</string>
+    <string name="profile_page_title">Profile</string>
+    <string name="order_history_label">Order history</string>
+    <string name="log_out_label">Log out</string>
+    <string name="order_history_title">Order history</string>
+    <string name="yes_label">Yes</string>
+    <string name="no_label">No</string>
+    <string name="account_label">Account</string>
+    <string name="back_label">Back</string>
+    <string name="details_label">Details</string>
+    <string name="receipt_label">Receipt</string>
+    <string name="date_label">Date</string>
+    <string name="item_description">item</string>
+    <string name="items_description">items</string>
+
+    <string name="check_out_title">Are you sure?</string>
+    <string name="check_out_description">Are you sure you want to proceed to</string>
 </resources>
